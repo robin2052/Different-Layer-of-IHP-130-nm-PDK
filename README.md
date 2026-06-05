@@ -246,5 +246,5 @@ A practical layout point for analog/VLSI:
 
 So if you saw **SALBLOCK inside Rppd**, that is not an extra feature — it is **essential**. Without it, **Rppd would not behave as a proper precision resistor.**
 
-
-
+**When to resistor ar keeping side by side i can merge them till the the distance between gatepoly to gate poly distance is .18**
+ <img width="335" height="360" alt="image" src="https://github.com/user-attachments/assets/5eeba1fe-d670-431f-9caa-bc7a4cc5f27c" />
