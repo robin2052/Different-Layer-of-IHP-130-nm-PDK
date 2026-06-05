@@ -177,4 +177,74 @@ For your PLL/analog work, this matters because:
 * **Precision resistors (Rppd)** → usually unsalicided
 * Wrong salicide settings can completely change resistance values and break circuits like loop filters or bias networks.
 
+  # Salblock Layer.
+
+   he **SALBLOCK (salicide block)** layer is placed there intentionally.
+
+Remember the Rppd description:
+
+> "Rppd utilizes **unsalicided**, p-doped gate polysilicon as resistor material."
+
+To make the poly remain **unsalicided**, the process must prevent silicide formation. That is the job of **SALBLOCK**.
+
+Without SALBLOCK:
+
+```text
+Poly resistor
+     ↓
+Silicidation occurs
+     ↓
+Resistance becomes very low
+     ↓
+Resistor value becomes wrong
+```
+
+With SALBLOCK:
+
+```text
+Poly resistor
++-----------------------+
+|      SALBLOCK         |
++-----------------------+
+          ↓
+Silicide cannot form
+          ↓
+Poly remains resistive
+          ↓
+Rppd keeps ~260 Ω/□
+```
+
+Physically during fabrication:
+
+* Metal for silicidation is deposited over the wafer.
+* Areas **without SALBLOCK** → metal reacts with silicon/poly → silicide forms.
+* Areas **with SALBLOCK** → reaction is prevented.
+* The poly underneath remains high resistance.
+
+For your layout, the stack is conceptually:
+
+```text
+Rppd structure
+
+Poly
++------------------+
+|                  |
++------------------+
+
+SALBLOCK
++------------------+
+|                  |
++------------------+
+```
+
+A practical layout point for analog/VLSI:
+
+* SALBLOCK should fully cover the resistor body.
+* Usually it extends beyond the resistor edges according to DRC rules.
+* If part of the resistor is accidentally left uncovered, local silicidation can occur and change the effective resistance.
+* Contact regions may intentionally be treated differently depending on the PDK rule.
+
+So if you saw **SALBLOCK inside Rppd**, that is not an extra feature — it is **essential**. Without it, **Rppd would not behave as a proper precision resistor.**
+
+
 
