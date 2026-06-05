@@ -247,4 +247,52 @@ A practical layout point for analog/VLSI:
 So if you saw **SALBLOCK inside Rppd**, that is not an extra feature — it is **essential**. Without it, **Rppd would not behave as a proper precision resistor.**
 
 **When to resistor ar keeping side by side i can merge them till the the distance between gatepoly to gate poly distance is .18**
+ 
+ 
  <img width="335" height="360" alt="image" src="https://github.com/user-attachments/assets/5eeba1fe-d670-431f-9caa-bc7a4cc5f27c" />
+
+ # Guard Rings
+
+ In the **IHP SG13G2** PDK (indicated by the `SG13G2Cu Features` menu at the top of your layout window), the naming convention for guard ring templates explicitly tells you which metal layers, via layers, and substrate/well diffusions are being used.
+
+When you are placing a guard ring for an **NMOS**, you typically want a **p-type guard ring** (connected to $V_{SS}$ / Ground) to surround the NMOS and tap into the p-substrate, isolating it from switching noise.
+
+Here is how to decode this list so you can choose the correct one:
+
+### 1. Decoding the Template Naming Convention
+
+The names follow a **`TopLayer_BottomLayer_Version`** format:
+
+* **M1, M2, M3, M4:** Standard metal layers.
+* **TC1, TC2, TkA1:** Thick metal layers (typically used for RF/power routing).
+* **pActiv:** P+ Active diffusion (used for P-substrate/P-well taps).
+* **NWell:** N-Well diffusion (used for N-well taps).
+* **`_db` suffix:** This stands for **Double Bond** (or double row of contacts/vias), which reduces resistance and provides better isolation, though it takes up slightly more layout area.
+
+---
+
+### 2. Which one should you choose for an NMOS?
+
+Look at the bottom of your dropdown list. You need a template that connects down to **`pActiv`** (P+ substrate tap).
+
+For a standard NMOS guard ring, you should choose one of these three, depending on how robust you need the isolation to be:
+
+* **`M1_pActiv_c1_db`** (Recommended for standard/compact layout)
+* **`M1_pActiv_c2_db`**
+* **`M1_pActiv_c3_db`**
+
+**Why these?**
+
+1. **`M1_pActiv`**: This means Metal 1 connects directly down through contacts to the **P+ Active** diffusion region. This creates your p-type substrate ring.
+2. **`_db`**: You absolutely want the `_db` version for a guard ring because the double contact row ensures a highly conductive path to ground, effectively sinking stray substrate currents.
+3. **What do `c1`, `c2`, `c3` mean?** These represent different preset configurations (usually varying the width of the diffusion ring or the spacing to the device to meet different density or RF isolation rules). **`c1`** is typically the most compact, standard width.
+
+---
+
+### Summary Action Plan
+
+1. Scroll to the bottom of that dropdown menu.
+2. Select **`M1_pActiv_c1_db`**.
+3. Once the ring is generated around your NMOS, make sure you route your **$V_{SS}$ / Ground** net to this Metal 1 ring.
+
+*(Note: The other templates at the top like `M2_M1_v1` or `M3_M2_v1` are just metal-to-metal via rings, which you would only use if you wanted to stack higher metal layers on top of an existing Guard Ring).*
