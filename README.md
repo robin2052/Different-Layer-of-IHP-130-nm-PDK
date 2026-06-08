@@ -359,3 +359,6 @@ Think of it as:
 
 This is similar to some other marker layers you have seen such as **HeatTrans**, **block layers**, or **RPPD markers**—they guide manufacturing rather than create electrical structures.
 
+<img width="607" height="240" alt="image" src="https://github.com/user-attachments/assets/b4fcca3b-e7a7-419d-9c38-fde618a123ba" />
+Here the blue color dot dot is metal1 noslit. metal 1 noslit is surrounding the guard ring type structure
+
