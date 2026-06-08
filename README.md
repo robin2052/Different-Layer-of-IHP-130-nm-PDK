@@ -296,3 +296,66 @@ For a standard NMOS guard ring, you should choose one of these three, depending 
 3. Once the ring is generated around your NMOS, make sure you route your **$V_{SS}$ / Ground** net to this Metal 1 ring.
 
 *(Note: The other templates at the top like `M2_M1_v1` or `M3_M2_v1` are just metal-to-metal via rings, which you would only use if you wanted to stack higher metal layers on top of an existing Guard Ring).*
+
+# Metal1 Noslit
+ In VLSI layout, **Metal1_noslit (or M1_noslit)** is a special marker layer used to tell the foundry **not to insert metal slotting (slits)** into a Metal1 region.
+
+Normally, during fabrication, when a metal area becomes very large and wide, the foundry may automatically add **slits/slots** inside the metal polygon because of manufacturing reasons:
+
+* Reduce mechanical stress
+* Improve CMP (Chemical Mechanical Polishing) uniformity
+* Prevent metal peeling or cracking
+* Reduce density-related fabrication issues
+
+Without slotting:
+
+```
+██████████████████   ← continuous metal
+```
+
+With slotting:
+
+```
+██ ██ ██ ██ ██ ██
+██ ██ ██ ██ ██ ██
+```
+
+The **Metal1_noslit** layer says:
+
+> "Keep this Metal1 region solid; do not automatically cut slots into it."
+
+Typical situations where you may use it:
+
+* Sensitive analog circuits
+* Shielding metal
+* Matching-critical structures
+* RF blocks
+* Power routing where continuous current flow is important
+* Capacitor plates
+* Guard-ring related metal regions
+
+For example in PLL layout (which you were asking about earlier):
+
+* VCO shielding metal may use **M1_noslit**
+* Sensitive analog nodes in a charge pump may use it
+* Common-centroid structures may need uninterrupted metal for matching
+
+Be careful though: using **noslit** everywhere is not good because:
+
+* It can violate density or stress requirements
+* Increase CMP variation
+* May create DRC issues depending on the PDK
+
+In IHP PDK specifically, if you saw something like:
+
+`Metal1_noslit`
+
+it is usually **not a conducting layer itself**. It is only a **marker layer** placed over Metal1 to control fabrication behavior.
+
+Think of it as:
+
+**Metal1 → actual wire**
+**Metal1_noslit → instruction to fabrication tool**
+
+This is similar to some other marker layers you have seen such as **HeatTrans**, **block layers**, or **RPPD markers**—they guide manufacturing rather than create electrical structures.
+
